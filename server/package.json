@@ -1,0 +1,24 @@
+{
+	"name": "video-share-app",
+	"version": "1.0.0",
+	"description": "Wil's portfolio video sharing app.",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "nodemon index.js"
+	},
+	"keywords": [
+		"video",
+		"videos",
+		"video",
+		"sharing",
+		"youtube"
+	],
+	"author": "Mukulembeze Wil",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.18.2",
+		"mongoose": "^7.5.0",
+		"nodemon": "^3.0.1"
+	}
+}
