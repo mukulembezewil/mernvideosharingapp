@@ -22,14 +22,27 @@ export const update = async (req, res, next) => {
 	}
 };
 
-export const deleteUser = (req, res) => {};
+export const deleteUser = async (req, res, next) => {
+	if (req.params.id === req.user.id) {
+		try {
+			await Viduser.findByIdAndDelete(req.params.id);
+			res.status(200).json('User has been removed successfully!');
+		} catch (err) {
+			next(err);
+		}
+	} else {
+		return next(
+			createError(403, 'Stop!! You can only delete your account bro/sis')
+		);
+	}
+};
 
-export const getUser = (req, res) => {};
+export const getUser = async (req, res) => {};
 
-export const subscribe = (req, res) => {};
+export const subscribe = async (req, res) => {};
 
-export const unsubscribe = (req, res) => {};
+export const unsubscribe = async (req, res) => {};
 
-export const like = (req, res) => {};
+export const like = async (req, res) => {};
 
-export const dislike = (req, res) => {};
+export const dislike = async (req, res) => {};
