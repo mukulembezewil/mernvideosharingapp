@@ -1,12 +1,13 @@
 import { createError } from '../error.js';
+import Viduser from '../models/Viduser.js';
 
 export const update = async (req, res, next) => {
 	if (req.params.id === req.user.id) {
 		try {
-			const updatedUser = await User.findByIdAndUpdate(
+			const updatedUser = await Viduser.findByIdAndUpdate(
 				req.params.id,
 				{
-					$set: res.body,
+					$set: req.body,
 				},
 				{ new: true }
 			);
