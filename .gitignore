@@ -8,7 +8,7 @@
 node_modules
 Mongodb Atlas
 .env
-
+docs_server.md
 
 
 # Book build output
