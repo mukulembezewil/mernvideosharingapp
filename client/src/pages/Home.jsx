@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import Card from '../components/Card';
 
@@ -25,14 +24,7 @@ const Home = () => {
 			<Card />
 			<Card />
 			<Card />
-			<Card />
-			<Card />
-			<Card />
-			<Card />
-			<Card />
-			<Card />
 		</Container>
 	);
 };
-
 export default Home;
