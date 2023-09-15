@@ -41,6 +41,14 @@ function App() {
 										element={<Home />}
 									/>
 									<Route
+										path="trends"
+										element={<Home type="trend" />}
+									/>
+									<Route
+										path="subscriptions"
+										element={<Home type="sub" />}
+									/>
+									<Route
 										path="signin"
 										element={<SignIn />}
 									/>
