@@ -1,5 +1,9 @@
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { format } from 'timeago.js';
 
 const Container = styled.div`
 	width: ${(props) => props.type !== 'sm' && '360px'};
@@ -48,7 +52,16 @@ const Info = styled.div`
 font-size 13px;
 color: ${({ theme }) => theme.textSoft}`;
 
-const Card = ({ type }) => {
+const Card = ({ type, video }) => {
+	const [channel, setChannel] = useState({});
+	useEffect(() => {
+		const fetchChannel = async () => {
+			const res = await axios.get(`/users/find/${video.userId}`);
+			setChannel(res.data);
+		};
+		fetchChannel();
+	}, [video.userId]);
+
 	return (
 		<Link
 			to="/video/test"
@@ -57,17 +70,19 @@ const Card = ({ type }) => {
 			<Container type={type}>
 				<Image
 					type={type}
-					src="https://web-cdn.meridianuniversity.edu/site-content-images/content-library/deciphering-the-esoteric-meaning-a-conceptual-analysis-image-one.webp"
+					src={video.imgUrl}
 				/>
 				<Details type={type}>
 					<ChannelImage
 						type={type}
-						src="https://res.cloudinary.com/rsc/image/upload/b_rgb:FFFFFF,c_pad,dpr_2.625,f_auto,h_214,q_auto,w_380/c_pad,h_214,w_380/R1370284-01?pgw=1"
+						src={channel.img}
 					/>
 					<Texts>
-						<Title>Wil's Adventures</Title>
-						<ChannelName>Wil's Recollection</ChannelName>
-						<Info>300m views . 1 day ago</Info>
+						<Title>{video.title}</Title>
+						<ChannelName>{channel.name}</ChannelName>
+						<Info>
+							{video.views} views . {format(video.createdAt)}
+						</Info>
 					</Texts>
 				</Details>
 			</Container>
