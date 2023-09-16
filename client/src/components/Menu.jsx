@@ -17,6 +17,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Container = styled.div`
 	flex: 1;
@@ -83,6 +84,7 @@ const Title = styled.h2`
 `;
 
 const Menu = ({ darkMode, setdarkMode }) => {
+	const { currentuser } = useSelector((state) => state.user);
 	return (
 		<Container>
 			<Wrapper>
@@ -127,19 +129,23 @@ const Menu = ({ darkMode, setdarkMode }) => {
 					History
 				</Item>
 				<Hr />
-				<Login>
-					Sign in to like videos, comment and subscribe
-					<Link
-						to="signin"
-						style={{ textDecoration: 'none' }}
-					>
-						<Button>
-							<LockOpenIcon />
-							Sign In
-						</Button>
-					</Link>
-				</Login>
-				<Hr />
+				{!currentuser && (
+					<>
+						<Login>
+							Sign in to like videos, comment and subscribe
+							<Link
+								to="signin"
+								style={{ textDecoration: 'none' }}
+							>
+								<Button>
+									<LockOpenIcon />
+									Sign In
+								</Button>
+							</Link>
+						</Login>
+						<Hr />
+					</>
+				)}
 				<Title>BEST OF MUKULEMBEZE</Title>
 				<Item>
 					<LibraryMusicIcon />
