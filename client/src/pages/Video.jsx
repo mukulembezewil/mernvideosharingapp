@@ -5,6 +5,13 @@ import ShareIcon from '@mui/icons-material/Share';
 import SaveIcon from '@mui/icons-material/Save';
 import Comments from '../components/Comments';
 import Card from '../components/Card';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { fetchSuccess } from '../redux/videoSlice';
+import { format } from 'timeago.js';
 
 const Container = styled.div`
 	display: flex;
@@ -108,6 +115,28 @@ const Subscribe = styled.button`
 `;
 
 const Video = () => {
+	const { currentuser } = useSelector((state) => state.user);
+	const { currentVideo } = useSelector((state) => state.video);
+	const dispatch = useDispatch();
+
+	const path = useLocation().pathname.split('/')[2];
+
+	const [channel, setChannel] = useState({});
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const videoRes = await axios.get(`/videos/find/${path}`);
+				const channelRes = await axios.get(`users/find/${videoRes.data.userId}`);
+
+				setChannel(channelRes.data);
+				dispatch(fetchSuccess(videoRes.data));
+			} catch (err) {}
+		};
+		fetchData();
+	}, [path, dispatch]);
+
+	console.log(path);
 	return (
 		<Container>
 			<Content>
@@ -122,13 +151,16 @@ const Video = () => {
 						allowfullscreen
 					></iframe>
 				</VideoWrapper>
-				<Title>Wil's Adventures</Title>
+				<Title>{currentVideo.title}</Title>
 				<Details>
-					<Info> 7, 987, 154 views . Sept 12, 2023</Info>
+					<Info>
+						{' '}
+						{currentVideo.views} views . {format(currentVideo.createdAt)}
+					</Info>
 					<Buttons>
 						<Button>
 							<ThumbUpIcon />
-							123
+							{currentVideo.likes?.length}
 						</Button>
 						<Button>
 							<ThumbDownIcon /> Dislike
@@ -146,16 +178,11 @@ const Video = () => {
 				<Hr />
 				<Channel>
 					<ChannelInfo>
-						<Image src="https://res.cloudinary.com/rsc/image/upload/b_rgb:FFFFFF,c_pad,dpr_2.625,f_auto,h_214,q_auto,w_380/c_pad,h_214,w_380/R1370284-01?pgw=1" />
+						<Image src={channel.img} />
 						<ChannelDetail>
-							<ChannelName>Mukulembeze</ChannelName>
-							<ChannelCounter>200m subscribers</ChannelCounter>
-							<Description>
-								Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste dolorum
-								vitae, dignissimos perspiciatis saepe maxime dicta est maiores
-								praesentium, quaerat reiciendis sed in inventore aspernatur? Incidunt
-								adipisci a aspernatur in!
-							</Description>
+							<ChannelName>{channel.name}</ChannelName>
+							<ChannelCounter>{channel.subscribers} subscribers</ChannelCounter>
+							<Description>{currentVideo.desc}</Description>
 						</ChannelDetail>
 					</ChannelInfo>
 					<Subscribe>Subscribe</Subscribe>
@@ -163,13 +190,13 @@ const Video = () => {
 				<Hr />
 				<Comments />
 			</Content>
-			<Recommendation>
+			{/* <Recommendation>
 				<Card type="sm" />
 				<Card type="sm" />
 				<Card type="sm" />
 				<Card type="sm" />
 				<Card type="sm" />
-			</Recommendation>
+			</Recommendation> */}
 		</Container>
 	);
 };
