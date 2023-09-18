@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbDown';
+import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDown';
 import ShareIcon from '@mui/icons-material/Share';
 import SaveIcon from '@mui/icons-material/Save';
 import Comments from '../components/Comments';
@@ -10,7 +12,7 @@ import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
-import { fetchSuccess } from '../redux/videoSlice';
+import { dislike, fetchSuccess, like } from '../redux/videoSlice';
 import { format } from 'timeago.js';
 
 const Container = styled.div`
@@ -136,7 +138,16 @@ const Video = () => {
 		fetchData();
 	}, [path, dispatch]);
 
-	console.log(path);
+	const handleLike = async () => {
+		await axios.put(`/users/like/${currentVideo._id}`);
+		dispatch(like(currentuser._id));
+	};
+
+	const handleDislike = async () => {
+		await axios.put(`/users/dislike/${currentVideo._id}`);
+		dispatch(dislike(currentuser._id));
+	};
+
 	return (
 		<Container>
 			<Content>
@@ -154,16 +165,24 @@ const Video = () => {
 				<Title>{currentVideo.title}</Title>
 				<Details>
 					<Info>
-						{' '}
 						{currentVideo.views} views . {format(currentVideo.createdAt)}
 					</Info>
 					<Buttons>
-						<Button>
-							<ThumbUpIcon />
+						<Button onClick={handleLike}>
+							{currentVideo.likes?.includes(currentuser._id) ? (
+								<ThumbUpIcon />
+							) : (
+								<ThumbUpOutlinedIcon />
+							)}{' '}
 							{currentVideo.likes?.length}
 						</Button>
-						<Button>
-							<ThumbDownIcon /> Dislike
+						<Button onclick={handleDislike}>
+							{currentVideo.dislikes?.includes(currentuser._id) ? (
+								<ThumbDownIcon />
+							) : (
+								<ThumbDownOffAltOutlinedIcon />
+							)}{' '}
+							Dislike
 						</Button>
 						<Button>
 							<ShareIcon />
