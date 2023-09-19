@@ -32,7 +32,7 @@ const Text = styled.span`
 	font-size: 14px;
 `;
 
-const Comment = () => {
+const Comment = ({ comment }) => {
 	return (
 		<Container>
 			<Avatar src="https://res.cloudinary.com/rsc/image/upload/b_rgb:FFFFFF,c_pad,dpr_2.625,f_auto,h_214,q_auto,w_380/c_pad,h_214,w_380/R1370284-01?pgw=1" />
@@ -40,11 +40,7 @@ const Comment = () => {
 				<Name>
 					Wil P M<Date>1 day ago</Date>
 				</Name>
-				<Text>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio laudantium
-					quos, a ducimus non maiores dolorum vero? Magnam voluptas rem fuga non? Vel
-					maxime quas placeat sunt dolorum quia veritatis!
-				</Text>
+				<Text>{comment.desc}</Text>
 			</Details>
 		</Container>
 	);
