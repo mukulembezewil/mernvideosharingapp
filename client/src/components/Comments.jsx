@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 import Comment from './Comment';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Container = styled.div``;
 
@@ -25,20 +29,31 @@ const Input = styled.input`
 	color: ${({ theme }) => theme.textSoft};
 `;
 
-const Comments = () => {
+const Comments = ({ videoId }) => {
+	const { currentuser } = useSelector((state) => state.user);
+	const [comments, setComments] = useState([]);
+
+	useEffect(() => {
+		const fetchComments = async () => {
+			try {
+				const res = await axios.get(`/comments/${videoId}`);
+				setComments(res.data);
+			} catch (err) {}
+		};
+		fetchComments();
+	}, [videoId]);
 	return (
 		<Container>
 			<NewComment>
-				<Avatar src="https://res.cloudinary.com/rsc/image/upload/b_rgb:FFFFFF,c_pad,dpr_2.625,f_auto,h_214,q_auto,w_380/c_pad,h_214,w_380/R1370284-01?pgw=1" />
+				<Avatar src={currentuser.img} />
 				<Input placeholder="Add a comment..." />
 			</NewComment>
-			<Comment />
-			<Comment />
-			<Comment />
-			<Comment />
-			<Comment />
-			<Comment />
-			<Comment />
+			{comments.map((comment) => (
+				<Comment
+					key={comment._id}
+					comment={comment}
+				/>
+			))}
 		</Container>
 	);
 };
