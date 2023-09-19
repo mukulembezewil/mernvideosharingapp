@@ -14,6 +14,8 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { dislike, fetchSuccess, like } from '../redux/videoSlice';
 import { format } from 'timeago.js';
+import { subscription } from '../redux/userSlice';
+import { current } from '@reduxjs/toolkit';
 
 const Container = styled.div`
 	display: flex;
@@ -116,6 +118,12 @@ const Subscribe = styled.button`
 	cursor: pointer;
 `;
 
+const VideoFrame = styled.video`
+	max-height: 720px;
+	width: 100%;
+	object-fit: cover;
+`;
+
 const Video = () => {
 	const { currentuser } = useSelector((state) => state.user);
 	const { currentVideo } = useSelector((state) => state.video);
@@ -148,19 +156,18 @@ const Video = () => {
 		dispatch(dislike(currentuser._id));
 	};
 
+	const handleSub = async () => {
+		currentuser.subscribedUsers.includes(channel._id)
+			? await axios.put(`/users/unsub/${channel._id}`)
+			: await axios.put(`/users/sub/${channel._id}`);
+		dispatch(subscription(channel._id));
+	};
+
 	return (
 		<Container>
 			<Content>
 				<VideoWrapper>
-					<iframe
-						width="100%"
-						height="720"
-						src="https://www.youtube.com/embed/c-I5S_zTwAc?si=HPVlbmZCHTCCwFbb"
-						title="YouTube video player"
-						frameborder="0"
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-						allowfullscreen
-					></iframe>
+					<VideoFrame src={currentVideo.videoUrl} />
 				</VideoWrapper>
 				<Title>{currentVideo.title}</Title>
 				<Details>
@@ -204,10 +211,14 @@ const Video = () => {
 							<Description>{currentVideo.desc}</Description>
 						</ChannelDetail>
 					</ChannelInfo>
-					<Subscribe>Subscribe</Subscribe>
+					<Subscribe onClick={handleSub}>
+						{currentuser.subscribedUsers?.includes(channel._id)
+							? 'Subscribed'
+							: 'Subscribe'}
+					</Subscribe>
 				</Channel>
 				<Hr />
-				<Comments />
+				<Comments videoId={currentVideo._id} />
 			</Content>
 			{/* <Recommendation>
 				<Card type="sm" />
