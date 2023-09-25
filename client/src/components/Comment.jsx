@@ -1,3 +1,6 @@
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -33,12 +36,22 @@ const Text = styled.span`
 `;
 
 const Comment = ({ comment }) => {
+	const [channel, setChannel] = useState({});
+
+	useEffect(() => {
+		const fetchComment = async () => {
+			const res = await axios.get(`users/find/${comment.userId}`);
+			setChannel(res.data);
+		};
+		fetchComment();
+	}, [comment.userId]);
 	return (
 		<Container>
-			<Avatar src="https://res.cloudinary.com/rsc/image/upload/b_rgb:FFFFFF,c_pad,dpr_2.625,f_auto,h_214,q_auto,w_380/c_pad,h_214,w_380/R1370284-01?pgw=1" />
+			<Avatar src={channel.img} />
 			<Details>
 				<Name>
-					Wil P M<Date>1 day ago</Date>
+					{channel.name}
+					<Date>1 day ago</Date>
 				</Name>
 				<Text>{comment.desc}</Text>
 			</Details>
