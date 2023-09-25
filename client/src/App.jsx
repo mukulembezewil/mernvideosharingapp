@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home.jsx';
 import Video from './pages/Video.jsx';
 import SignIn from './pages/SignIn';
+import Search from './pages/Search';
 
 const Container = styled.div`
 	display: flex;
@@ -47,6 +48,10 @@ function App() {
 									<Route
 										path="subscriptions"
 										element={<Home type="sub" />}
+									/>
+									<Route
+										path="search"
+										element={<Search />}
 									/>
 									<Route
 										path="signin"
