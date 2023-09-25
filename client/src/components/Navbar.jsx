@@ -1,8 +1,10 @@
 import { AccountCircleOutlined, VideoCallOutlined } from '@mui/icons-material';
 import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import Upload from './Upload';
 
 const Container = styled.div`
 	position: sticky;
@@ -31,6 +33,7 @@ const Search = styled.div`
 	padding: 5px;
 	border: 1px solid #ccc;
 	border-radius: 3px;
+	color: ${({ theme }) => theme.text};
 `;
 const Input = styled.input`
 	border: none;
@@ -66,33 +69,42 @@ const Avatar = styled.img`
 	background-color: #999;
 `;
 const Navbar = () => {
+	const navigate = useNavigate();
+	const [open, setOpen] = useState(false);
+	const [q, setQ] = useState('');
 	const { currentuser } = useSelector((state) => state.user);
 	return (
-		<Container>
-			<Wrapper>
-				<Search>
-					<Input placeholder="Search" />
-					<SearchIcon />
-				</Search>
-				{currentuser ? (
-					<User>
-						<VideoCallOutlined />
-						<Avatar src={currentuser.img} />
-						{currentuser.name}
-					</User>
-				) : (
-					<Link
-						to="signin"
-						style={{ textDecoration: 'none' }}
-					>
-						<Button>
-							<AccountCircleOutlined />
-							Sign In
-						</Button>
-					</Link>
-				)}
-			</Wrapper>
-		</Container>
+		<>
+			<Container>
+				<Wrapper>
+					<Search>
+						<Input
+							placeholder="Search"
+							onChange={(e) => setQ(e.target.value)}
+						/>
+						<SearchIcon onClick={() => navigate(`/search?=${q}`)} />
+					</Search>
+					{currentuser ? (
+						<User>
+							<VideoCallOutlined onClick={() => setOpen(true)} />
+							<Avatar src={currentuser.img} />
+							{currentuser.name}
+						</User>
+					) : (
+						<Link
+							to="signin"
+							style={{ textDecoration: 'none' }}
+						>
+							<Button>
+								<AccountCircleOutlined />
+								Sign In
+							</Button>
+						</Link>
+					)}
+				</Wrapper>
+			</Container>
+			{open && <Upload setOpen={setOpen} />}
+		</>
 	);
 };
 export default Navbar;
